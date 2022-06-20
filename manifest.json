@@ -1,0 +1,45 @@
+{
+	"id": "com.transformd.hello-there",
+	"manifest_version": 1,
+	"version": "0.0.6",
+	"name": "Hello There",
+	"icon": "icon.svg",
+	"routes": {
+		"home": {
+			"uri": "/"
+		},
+		"abc-123": {
+			"uri": "abc/123"
+		},
+		"submission.view": {
+			"uri": "submissions/{submissionId}",
+			"params": {
+				"submissionId": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"ui": {
+		"screen": {
+			"entrypoint": "index.html"
+		},
+		"navigation": {
+			"active": true,
+			"menu": [
+				{
+					"id": "home",
+					"route": "home",
+					"text": null,
+					"icon": "assets/home.png"
+				},
+				{
+					"id": "abc",
+					"route": ["abc-123"],
+					"text": "ABC 123",
+					"icon": "assets/abc.png"
+				}
+			]
+		}
+	}
+}
