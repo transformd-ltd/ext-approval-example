@@ -1,7 +1,7 @@
 {
 	"id": "com.transformd.hello-there",
 	"manifest_version": 1,
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"name": "Hello There",
 	"icon": "icon.svg",
 	"routes": {
@@ -31,13 +31,13 @@
 					"id": "home",
 					"route": "home",
 					"text": null,
-					"icon": "assets/home.png"
+					"icon": "home"
 				},
 				{
 					"id": "abc",
 					"route": ["abc-123"],
 					"text": "ABC 123",
-					"icon": "assets/abc.png"
+					"icon": "tag"
 				}
 			]
 		}
