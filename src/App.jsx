@@ -4,8 +4,6 @@ import {
   unstable_HistoryRouter as HistoryRouter,
   Routes,
   Route,
-  Link,
-  useParams,
 } from "react-router-dom";
 
 import NotFound from "./components/NotFound";
