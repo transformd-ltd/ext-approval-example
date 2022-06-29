@@ -9,7 +9,7 @@ import API from "../API";
 import axios from "axios";
 
 function ApprovalTaskScreen(props) {
-  const { task, assignment } = props;
+  const { task, assignment, rootAppUrl } = props;
 
   const [config, setConfig] = useState(null);
   const dataHelper = useMemo(() => new Data(), []);
@@ -52,7 +52,7 @@ function ApprovalTaskScreen(props) {
 
   useEffect(() => {
     axios
-      .get("/config.json")
+      .get(`${rootAppUrl}/config.json`)
       .then(res => setConfig(res.data));
 
     API.submissions.retrieve(submissionId)
@@ -139,8 +139,12 @@ ApprovalTaskScreen.propTypes = {
   assignment: PropTypes.object,
   env: PropTypes.object,
   apiUrl: PropTypes.string,
+  rootAppUrl: PropTypes.string,
   sdkApiUrl: PropTypes.string,
   subscriptionApiUrl: PropTypes.string,
 };
+ApprovalTaskScreen.defaultProps = {
+  rootAppUrl: '',
+}
 
 export default ApprovalTaskScreen;
