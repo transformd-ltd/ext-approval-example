@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^4.5.1",
-    "@forge/bridge": "^2.3.0",
     "@tailwindcss/forms": "^0.5.2",
     "@tailwindcss/typography": "^0.5.2",
+    "@transformd-ltd/sandbox-bridge": "^0.0.1",
     "@transformd-ltd/sdk": "^1.0.4-csc",
     "axios": "^0.27.2",
     "get": "^1.4.0",
