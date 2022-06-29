@@ -1,8 +1,8 @@
 {
-	"id": "com.transformd.mitch_test_app",
+	"id": "com.transformd.ext-approval-example",
 	"manifest_version": 1,
-	"version": "0.0.8",
-	"name": "Hello There",
+	"version": "0.0.1",
+	"name": "Example",
 	"icon": "icon.svg",
 	"environment": [
 		{

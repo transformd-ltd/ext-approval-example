@@ -1,12 +1,13 @@
 {
   "name": "hello-there",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "npx eslint ./src --ext .js,jsx"
+    "lint": "npx eslint ./src --ext .js,jsx",
+    "package": "./scripts/build-package.sh"
   },
   "dependencies": {
     "@blueprintjs/core": "^4.5.1",
