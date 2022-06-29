@@ -63,7 +63,9 @@ function ApprovalTaskScreen(props) {
   }, []);
 
   if (!config) {
-    return <div>Loading..</div>
+    return (
+      <div>Loading..</div>
+    );
   }
 
   return (

@@ -30,16 +30,16 @@ module.exports = {
       2
     ],
     "linebreak-style": [
-        "error",
-        "unix"
+      "error",
+      "unix"
     ],
     "quotes": [
-        "error",
-        "double"
+      "error",
+      "double"
     ],
     "semi": [
-        "error",
-        "always"
+      "error",
+      "always"
     ]
   }
 };
