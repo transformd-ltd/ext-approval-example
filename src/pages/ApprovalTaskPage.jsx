@@ -5,12 +5,13 @@ import PropTypes from "prop-types";
 import get from "lodash/get";
 
 import ErrorBoundary from "../components/ErrorBoundary";
-import config from "../config.json";
 import API from "../API";
+import axios from "axios";
 
 function ApprovalTaskScreen(props) {
   const { task, assignment } = props;
 
+  const [config, setConfig] = useState(null);
   const dataHelper = useMemo(() => new Data(), []);
   const params = useParams();
   const { submissionId } = params;
@@ -50,7 +51,9 @@ function ApprovalTaskScreen(props) {
   // todo - make the submission button show some sort of MODAL that closes the submission
 
   useEffect(() => {
-    if (!API.client) return;
+    axios
+      .get('/config.json')
+      .then(res => setConfig(res.data))
 
     API.submissions.retrieve(submissionId)
       .then((res) => setSubmission(res.data))
@@ -58,6 +61,10 @@ function ApprovalTaskScreen(props) {
         console.error(err);
       });
   }, []);
+
+  if (!config) {
+    return <div>{JSON.stringify(config, null, 2)}</div>
+  }
 
   return (
     <ErrorBoundary>

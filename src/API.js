@@ -24,7 +24,6 @@ const Http = (baseURL, token, extraHeaders = {}, contentType = "application/json
 let client;
 
 const API = {
-  client,
   init(apiUri, pat) {
     client = Http(apiUri, pat);
   },
