@@ -52,8 +52,8 @@ function ApprovalTaskScreen(props) {
 
   useEffect(() => {
     axios
-      .get('/config.json')
-      .then(res => setConfig(res.data))
+      .get("/config.json")
+      .then(res => setConfig(res.data));
 
     API.submissions.retrieve(submissionId)
       .then((res) => setSubmission(res.data))
@@ -63,7 +63,7 @@ function ApprovalTaskScreen(props) {
   }, []);
 
   if (!config) {
-    return <div>{JSON.stringify(config, null, 2)}</div>
+    return <div>Loading..</div>
   }
 
   return (
