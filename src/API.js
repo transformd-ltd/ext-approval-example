@@ -1,30 +1,30 @@
-import axios from 'axios';
+import axios from "axios";
 
-let Http = (baseURL, token, headers = {}, contentType = 'application/json') => {
-  headers = {
-    ...headers,
-    'Content-Type': contentType,
-    Accept: 'application/json',
-    'Transformd-Version': '2020-05-21'
+const Http = (baseURL, token, extraHeaders = {}, contentType = "application/json") => {
+  let headers = {
+    ...extraHeaders,
+    "Content-Type": contentType,
+    Accept: "application/json",
+    "Transformd-Version": "2020-05-21",
   };
 
   if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+    headers.Authorization = `Bearer ${token}`;
   }
 
   return axios.create({
     baseURL,
     withCredentials: false,
-    responseType: 'json',
+    responseType: "json",
     timeout: 0,
-    headers
+    headers,
   });
 };
-
 
 let client;
 
 const API = {
+  client,
   init(apiUri, pat) {
     client = Http(apiUri, pat);
   },
@@ -33,7 +33,7 @@ const API = {
   },
   submissions: {
     retrieve: (id) => client.get(`submissions/${id}`),
-  }
-}
+  },
+};
 
 export default API;

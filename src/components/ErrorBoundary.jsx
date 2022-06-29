@@ -1,5 +1,6 @@
-import React, {Component} from "react";
-import {Callout} from "@blueprintjs/core";
+import { Component } from "react";
+import { Callout } from "@blueprintjs/core";
+import PropTypes from "prop-types";
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -7,7 +8,7 @@ class ErrorBoundary extends Component {
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     // Update state so the next render will show the fallback UI.
     return { hasError: true };
   }
@@ -24,11 +25,15 @@ class ErrorBoundary extends Component {
         <Callout title="Error" intent="danger" icon="error">
           <>Something broke! Please refresh and try again.</>
         </Callout>
-      )
+      );
     }
 
     return this.props.children;
   }
 }
+
+ErrorBoundary.propTypes = {
+  children: PropTypes.node,
+};
 
 export default ErrorBoundary;
