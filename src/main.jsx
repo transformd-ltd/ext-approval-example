@@ -2,9 +2,15 @@ import React from 'react'
 import { render } from 'react-dom'
 import App from './App'
 
+let props = {}
+try {
+   props = JSON.parse(window.name);
+} catch (e) {
+}
+
 render(
   <React.StrictMode>
-    <App />
+    <App {...props} />
   </React.StrictMode>,
   document.getElementById('root')
 )

@@ -1,21 +1,55 @@
 {
-	"id": "com.transformd.hello-there",
+	"id": "com.transformd.mitch_test_app",
 	"manifest_version": 1,
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"name": "Hello There",
 	"icon": "icon.svg",
+	"environment": [
+		{
+			"key": "FORM_ID",
+			"label": "Form ID",
+			"default": null,
+			"type": "number",
+			"description": "The Unique Numeric ID of the form",
+			"is_required": true
+		},
+		{
+			"key": "API_KEY",
+			"label": "API Key",
+			"description": "API Key for this application",
+			"type": "string",
+			"is_required": true
+		},
+		{
+			"key": "BRANCH",
+			"label": "Branch",
+			"description": "Form Branch",
+			"type": "string",
+			"is_required": true
+		},
+		{
+			"key": "CHANNEL",
+			"label": "Channel",
+			"description": "Form Channel to open",
+			"default": "master",
+			"type": "string",
+			"is_required": true
+		},
+		{
+			"key": "IS_LIVE",
+			"label": "Is Live?",
+			"description": "Is this a live environment",
+			"default": true,
+			"type": "boolean"
+		}
+	],
 	"routes": {
-		"home": {
-			"uri": "/"
-		},
-		"abc-123": {
-			"uri": "abc/123"
-		},
-		"submission.view": {
-			"uri": "submissions/{submissionId}",
+		"complete-task": {
+			"uri": "/",
 			"params": {
-				"submissionId": {
-					"type": "string"
+				"assignment_id": {
+					"type": "string",
+					"location": "query"
 				}
 			}
 		}
@@ -25,21 +59,12 @@
 			"entrypoint": "index.html"
 		},
 		"navigation": {
+			"theme": {
+				"background-color": "#ffffff",
+				"color": "#222222"
+			},
 			"active": true,
-			"menu": [
-				{
-					"id": "home",
-					"route": "home",
-					"text": null,
-					"icon": "home"
-				},
-				{
-					"id": "abc",
-					"route": ["abc-123"],
-					"text": "ABC 123",
-					"icon": "tag"
-				}
-			]
+			"menu": []
 		}
 	}
 }
