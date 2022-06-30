@@ -12,6 +12,8 @@ import "./App.css";
 import API from "./API";
 import ApprovalTaskPage from "./pages/ApprovalTaskPage";
 
+// todo - fix history loop!
+
 function App(props) {
   const [history, setHistory] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);

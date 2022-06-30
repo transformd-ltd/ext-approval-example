@@ -8,29 +8,143 @@ import ErrorBoundary from "../components/ErrorBoundary";
 import API from "../API";
 import axios from "axios";
 
+function ObjectDescriptor({ value }) {
+  return (
+    <div>
+      {Object.keys(value).map(key => {
+        return (
+          <div>
+            <b>{key}</b> : {JSON.stringify(value[key], null, 2)}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function DatumDescriptor({ config, data }) {
+  const type = get(data, 'type');
+  const value = get(data, `value`)
+  const span = get(config, 'span', 1);
+  const isObject = typeof value === 'object';
+  const isAbnLookup = type === 'abnLookup';
+
+  if (!data) {
+    return null;
+  }
+
+  return (
+    <div className={`col-span-${span}`}>
+      <h5 className="text-gray-400 font-normal">{config.title}</h5>
+      <div>
+        {!isObject && (<div>{value}</div>)}
+        {(isObject && !isAbnLookup) && (<ObjectDescriptor value={value} />)}
+        {isAbnLookup && (<div dangerouslySetInnerHTML={{__html: get(data, `value.abn.details`) }}></div>)}
+      </div>
+    </div>
+  )
+}
+
+function DetailSection({ submission, section }) {
+  const cols = get(section, 'columns', 2);
+
+  return (
+    <div className="bg-white rounded-lg mb-4 shadow-sm">
+      <div className="px-4 border-b py-2">
+        <h4 className="leading-8 font-normal">{section.title}</h4>
+      </div>
+      <span className="grid-cols-4 grid-cols-2 grid-cols-3 grid-cols-1">
+      {/*  Leave this here so tailwind can pick up the classnames*/}
+      </span>
+
+      <div className={`p-4 grid grid-cols-${cols} gap-2`}>
+        {section.data.map((config, i) => <DatumDescriptor data={get(submission, `values.${config.id}`)} config={config} key={i}/>)}
+      </div>
+    </div>
+  )
+}
+
+function SubmissionDetailList({ config, submission }) {
+  return (
+    <div className="col-span-3">
+      {config.submission.map((section, i) => <DetailSection submission={submission} section={section} key={i}/>)}
+    </div>
+  )
+}
+function TaskCompletionForm(props) {
+  const {
+    apiUrl,
+    sdkApiUrl,
+    subscriptionApiUrl,
+    dataHelper,
+    submission,
+    task,
+    env
+  } = props;
+
+  const formaticProps = {
+    data: dataHelper,
+    apiServerUrl: apiUrl,
+    serverUrl: sdkApiUrl,
+    subscriptionServerUrl: subscriptionApiUrl,
+    submissionIdKey: submission.id,
+    formId: env.FORM_ID,
+    apiKey: env.API_KEY,
+    environment: env.BRANCH,
+    channel: env.CHANNEL,
+  };
+
+  return (
+    <div className="col-span-2">
+      <div className="border rounded-lg bg-white">
+        <div className="px-4 border-b py-2">
+          <h4 className="leading-8 font-normal">Approval<span className="text-gray-500">(required)</span></h4>
+        </div>
+
+        <div className="p-4">
+          <Formatic {...formaticProps} />
+        </div>
+
+        <div className="">
+          <label htmlFor="" className="block">Outcome</label>
+          {get(task, "template.possible_outcomes", []).map((outcome, i) => (
+            <div key={i}>
+              <input type="checkbox" value={outcome} />{" "}{outcome}
+            </div>
+          ))}
+
+          <label htmlFor="" className="block">Resolution Message</label>
+          <textarea className="form-input" name="resolution_message" id="" rows="3" />
+        </div>
+      </div>
+    </div>
+  )
+}
+TaskCompletionForm.propTypes = {
+  env: PropTypes.shape({
+    FORM_ID: PropTypes.string,
+    API_KEY: PropTypes.string,
+    BRANCH: PropTypes.string,
+    CHANNEL: PropTypes.string,
+  })
+}
+TaskCompletionForm.defaultProps = {
+  env: {
+    FORM_ID: null,
+    API_KEY: null,
+    BRANCH: null,
+    CHANNEL: null,
+  }
+}
+
 function ApprovalTaskScreen(props) {
-  const { task, assignment, rootAppUrl } = props;
+  const { task, assignment, rootAppUrl, env } = props;
 
   const [config, setConfig] = useState(null);
   const dataHelper = useMemo(() => new Data(), []);
   const params = useParams();
   const { submissionId } = params;
   const [submission, setSubmission] = useState(null);
-
-  console.log({ assignment, task });
-
-  const formaticProps = {
-    data: dataHelper,
-    apiServerUrl: props.apiUrl,
-    serverUrl: props.sdkApiUrl,
-    subscriptionServerUrl: props.subscriptionApiUrl,
-    formId: props.env.FORM_ID,
-    apiKey: props.env.API_KEY,
-    environment: props.env.BRANCH,
-    submissionIdKey: params.submissionId,
-    // config: doNotPersistOnPageReload,
-    channel: props.env.CHANNEL,
-  };
 
   function handleFormComplete() {
     console.log("handleFormComplete");
@@ -47,9 +161,6 @@ function ApprovalTaskScreen(props) {
     }
   }, [dataHelper]);
 
-  // todo - have some sort of "completion modal" for the entire thing
-  // todo - make the submission button show some sort of MODAL that closes the submission
-
   useEffect(() => {
     axios
       .get(`${rootAppUrl}/config.json`)
@@ -62,11 +173,10 @@ function ApprovalTaskScreen(props) {
       });
   }, []);
 
-  if (!config) {
-    return (
-      <div>Loading..</div>
-    );
+  if (!config || !submission) {
+    return (<div>Loading..</div>);
   }
+
 
   return (
     <ErrorBoundary>
@@ -76,58 +186,20 @@ function ApprovalTaskScreen(props) {
         </div>
 
         <div className="grid grid-cols-5 h-full gap-6">
-          <div className="col-span-3">
-            {config.submission.map((section, i) => (
-              <div className="bg-white rounded-lg mb-4 shadow-sm" key={i}>
-                <div className="px-4 border-b py-2">
-                  <h4 className="leading-8 font-normal">{section.title}</h4>
-                </div>
-                <div className="p-4 grid grid-cols-2 gap-2">
-                  {section.data.map((datum, i) => (
-                    <div key={i}>
-                      <h5 className="text-gray-400 font-normal">{datum.title}</h5>
-                      <div>
-                        {JSON.stringify(get(submission, `values.${datum.id}.value`), null, 2) || "No Data"}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-            <div className="p-4 bg-white">
-              <pre>{JSON.stringify(submission, null, 2)}</pre>
-            </div>
-          </div>
+          <SubmissionDetailList
+            config={config}
+            submission={submission}
+          />
 
-          <div className="col-span-2">
-            <div className="border rounded-lg bg-white">
-              <div className="px-4 border-b py-2">
-                <h4 className="leading-8 font-normal">
-                  Approval
-                  <span className="text-gray-500">(required)</span>
-                </h4>
-              </div>
-
-              <div className="p-4">
-                <Formatic {...formaticProps} />
-              </div>
-
-              <div className="hidden">
-                <label htmlFor="" className="block">Outcome</label>
-                {get(task, "template.possible_outcomes", []).map((outcome, i) => (
-                  <div key={i}>
-                    <input type="checkbox" value={outcome} />
-                    {" "}
-                    {outcome}
-                    ;
-                  </div>
-                ))}
-
-                <label htmlFor="" className="block">Resolution Message</label>
-                <textarea className="form-input" name="resolution_message" id="" rows="3" />
-              </div>
-            </div>
-          </div>
+          <TaskCompletionForm
+            dataHelper={dataHelper}
+            submission={submission}
+            task={task}
+            env={env}
+            apiUrl={props.apiUrl}
+            sdkApiUrl={props.sdkApiUrl}
+            subscriptionApiUrl={props.subscriptionApiUrl}
+          />
         </div>
       </div>
     </ErrorBoundary>

@@ -8,7 +8,7 @@
       "data": [
         {"id": "firstName", "title": "First Name"},
         {"id": "lastName", "title": "Last Name"},
-        {"id": "please", "title": "Last Name"}
+        {"id": "emailAddress", "title": "Email", "span": 2}
       ]
     },
     {
@@ -16,8 +16,8 @@
       "type": "dataGrid",
       "columns": 2,
       "data": [
-        {"id": "abn", "title": "ABN"},
-        {"id": "please", "title": "Last Name"}
+        {"id": "abn", "title": "ABN", "span": 2},
+        {"id": "emailAddress", "title": "Email AGAIN"}
       ]
     }
   ]
