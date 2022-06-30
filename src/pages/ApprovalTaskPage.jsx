@@ -3,6 +3,8 @@ import Formatic, { Data } from "@transformd-ltd/sdk";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import get from "lodash/get";
+import { ExclamationIcon } from '@heroicons/react/outline'
+
 
 import ErrorBoundary from "../components/ErrorBoundary";
 import API from "../API";
@@ -161,6 +163,7 @@ function ApprovalTaskScreen(props) {
   const { task, assignment, rootAppUrl, env } = props;
 
   const [config, setConfig] = useState(null);
+  const [error, setError] = useState(null);
   const dataHelper = useMemo(() => new Data(), []);
   const params = useParams();
   const { submissionId } = params;
@@ -197,6 +200,35 @@ function ApprovalTaskScreen(props) {
     return (<div>Loading..</div>);
   }
 
+  if (!assignment) {
+    return (
+      <div className="max-w-2xl mx-auto py-16">
+        <div className="bg-red-100 p-4 rounded-lg flex justify-start gap-4">
+          <ExclamationIcon className="text-red-700 w-12"/>
+
+          <div className="">
+            <h3 className="text-red-700">Task is not assigned</h3>
+            <p className="text-red-800">Please assign this submission as a task before opening the URL</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (assignment.status === 'complete') {
+    return (
+      <div className="max-w-2xl mx-auto py-16">
+        <div className="bg-amber-100 p-4 rounded-lg flex justify-start gap-4">
+          <ExclamationIcon className="text-amber-700 w-12"/>
+
+          <div className="">
+            <h3 className="text-amber-700">Assignment is already complete</h3>
+            <p className="text-amber-800">Feel free to close this window</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <ErrorBoundary>
@@ -225,7 +257,6 @@ function ApprovalTaskScreen(props) {
     </ErrorBoundary>
   );
 }
-
 ApprovalTaskScreen.propTypes = {
   task: PropTypes.object,
   assignment: PropTypes.object,
