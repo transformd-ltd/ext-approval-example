@@ -11,23 +11,24 @@ import axios from "axios";
 function ObjectDescriptor({ value }) {
   return (
     <div>
-      {Object.keys(value).map(key => {
-        return (
-          <div>
-            <b>{key}</b> : {JSON.stringify(value[key], null, 2)}
-          </div>
-        )
-      })}
+      {Object.keys(value).map((key, i) => (
+        <div key={i}>
+          <b>{key}</b> : {JSON.stringify(value[key], null, 2)}
+        </div>
+      ))}
     </div>
-  )
+  );
 }
+ObjectDescriptor.propTypes = {
+  value: PropTypes.object,
+};
 
 function DatumDescriptor({ config, data }) {
-  const type = get(data, 'type');
-  const value = get(data, `value`)
-  const span = get(config, 'span', 1);
-  const isObject = typeof value === 'object';
-  const isAbnLookup = type === 'abnLookup';
+  const type = get(data, "type");
+  const value = get(data, "value");
+  const span = get(config, "span", 1);
+  const isObject = typeof value === "object";
+  const isAbnLookup = type === "abnLookup";
 
   if (!data) {
     return null;
@@ -39,14 +40,18 @@ function DatumDescriptor({ config, data }) {
       <div>
         {!isObject && (<div>{value}</div>)}
         {(isObject && !isAbnLookup) && (<ObjectDescriptor value={value} />)}
-        {isAbnLookup && (<div dangerouslySetInnerHTML={{__html: get(data, `value.abn.details`) }}></div>)}
+        {isAbnLookup && (<div dangerouslySetInnerHTML={{__html: get(data, "value.abn.details") }}></div>)}
       </div>
     </div>
-  )
+  );
 }
+DatumDescriptor.propTypes = {
+  config: PropTypes.object,
+  data: PropTypes.object,
+};
 
 function DetailSection({ submission, section }) {
-  const cols = get(section, 'columns', 2);
+  const cols = get(section, "columns", 2);
 
   return (
     <div className="bg-white rounded-lg mb-4 shadow-sm">
@@ -54,23 +59,32 @@ function DetailSection({ submission, section }) {
         <h4 className="leading-8 font-normal">{section.title}</h4>
       </div>
       <span className="grid-cols-4 grid-cols-2 grid-cols-3 grid-cols-1">
-      {/*  Leave this here so tailwind can pick up the classnames*/}
+        {/*  Leave this here so tailwind can pick up the classnames*/}
       </span>
 
       <div className={`p-4 grid grid-cols-${cols} gap-2`}>
         {section.data.map((config, i) => <DatumDescriptor data={get(submission, `values.${config.id}`)} config={config} key={i}/>)}
       </div>
     </div>
-  )
+  );
 }
+DetailSection.propTypes = {
+  submission: PropTypes.object,
+  section: PropTypes.object,
+};
 
 function SubmissionDetailList({ config, submission }) {
   return (
     <div className="col-span-3">
       {config.submission.map((section, i) => <DetailSection submission={submission} section={section} key={i}/>)}
     </div>
-  )
+  );
 }
+SubmissionDetailList.propTypes = {
+  submission: PropTypes.object,
+  config: PropTypes.object,
+};
+
 function TaskCompletionForm(props) {
   const {
     apiUrl,
@@ -118,16 +132,22 @@ function TaskCompletionForm(props) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 TaskCompletionForm.propTypes = {
+  apiUrl: PropTypes.string,
+  sdkApiUrl: PropTypes.string,
+  subscriptionApiUrl: PropTypes.string,
+  dataHelper: PropTypes.object,
+  submission: PropTypes.object,
+  task: PropTypes.object,
   env: PropTypes.shape({
     FORM_ID: PropTypes.string,
     API_KEY: PropTypes.string,
     BRANCH: PropTypes.string,
     CHANNEL: PropTypes.string,
   })
-}
+};
 TaskCompletionForm.defaultProps = {
   env: {
     FORM_ID: null,
@@ -135,7 +155,7 @@ TaskCompletionForm.defaultProps = {
     BRANCH: null,
     CHANNEL: null,
   }
-}
+};
 
 function ApprovalTaskScreen(props) {
   const { task, assignment, rootAppUrl, env } = props;
@@ -216,7 +236,7 @@ ApprovalTaskScreen.propTypes = {
   subscriptionApiUrl: PropTypes.string,
 };
 ApprovalTaskScreen.defaultProps = {
-  rootAppUrl: '',
-}
+  rootAppUrl: "",
+};
 
 export default ApprovalTaskScreen;
