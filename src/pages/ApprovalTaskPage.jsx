@@ -3,7 +3,7 @@ import Formatic, { Data } from "@transformd-ltd/sdk";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import get from "lodash/get";
-import { ExclamationIcon } from '@heroicons/react/outline'
+import { ExclamationIcon } from "@heroicons/react/outline";
 
 
 import ErrorBoundary from "../components/ErrorBoundary";
@@ -212,10 +212,10 @@ function ApprovalTaskScreen(props) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  if (assignment.status === 'complete') {
+  if (assignment.status === "complete") {
     return (
       <div className="max-w-2xl mx-auto py-16">
         <div className="bg-amber-100 p-4 rounded-lg flex justify-start gap-4">
@@ -227,7 +227,7 @@ function ApprovalTaskScreen(props) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
