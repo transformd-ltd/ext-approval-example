@@ -104,11 +104,13 @@ function TaskCompletionForm(props) {
     serverUrl: sdkApiUrl,
     subscriptionServerUrl: subscriptionApiUrl,
     submissionIdKey: submission.id,
-    formId: env.FORM_ID,
+    formId: Number(env.FORM_ID),
     apiKey: env.API_KEY,
     environment: env.BRANCH,
     channel: env.CHANNEL,
   };
+
+  // on submit, show the modal
 
   return (
     <div className="col-span-2">
@@ -118,7 +120,9 @@ function TaskCompletionForm(props) {
         </div>
 
         <div className="p-4">
-          <Formatic {...formaticProps} />
+          <Formatic
+            {...formaticProps}
+          />
         </div>
 
         <div className="">
@@ -159,6 +163,40 @@ TaskCompletionForm.defaultProps = {
   }
 };
 
+function TaskNotAssignedWarning() {
+  return (
+    <div className="max-w-2xl mx-auto py-16">
+      <div className="bg-red-100 p-4 rounded-lg flex justify-start gap-4">
+        <ExclamationIcon className="text-red-700 w-12"/>
+        <div className="">
+          <h3 className="text-red-700">Task is not assigned</h3>
+          <p className="text-red-800">Please assign this submission as a task before opening the URL</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TaskAlreadyCompletedWarning() {
+  return (
+    <div className="max-w-2xl mx-auto py-16">
+      <div className="bg-amber-100 p-4 rounded-lg flex justify-start gap-4">
+        <ExclamationIcon className="text-amber-700 w-12"/>
+
+        <div className="">
+          <h3 className="text-amber-700">Assignment is already complete</h3>
+          <p className="text-amber-800">Feel free to close this window</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+function Loading() {
+  return (
+    <div>Loading..</div>
+  )
+}
+
 function ApprovalTaskScreen(props) {
   const { task, assignment, rootAppUrl, env } = props;
 
@@ -170,14 +208,22 @@ function ApprovalTaskScreen(props) {
   const [submission, setSubmission] = useState(null);
 
   function handleFormComplete() {
-    console.log("handleFormComplete");
     API.assignments.update(props.assignment.task.id, props.assignment.id, { status: "complete" })
       .then((res) => {
         console.log(res.data);
+        // refresh the page?!
+        // todo - load the task again?
+        // record who completed the "approval"
       });
   }
 
+  // attach assignment_id to the xx
+  // on complete, auto-x
+  // get value of some field?
+  //
+
   useEffect(() => {
+    console.log({ dataHelper });
     if (dataHelper.store) {
       console.log({ dataHelper });
       dataHelper.getEmitter().on("SessionComplete", handleFormComplete);
@@ -197,37 +243,15 @@ function ApprovalTaskScreen(props) {
   }, []);
 
   if (!config || !submission) {
-    return (<div>Loading..</div>);
+    return <Loading/>;
   }
 
   if (!assignment) {
-    return (
-      <div className="max-w-2xl mx-auto py-16">
-        <div className="bg-red-100 p-4 rounded-lg flex justify-start gap-4">
-          <ExclamationIcon className="text-red-700 w-12"/>
-
-          <div className="">
-            <h3 className="text-red-700">Task is not assigned</h3>
-            <p className="text-red-800">Please assign this submission as a task before opening the URL</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <TaskNotAssignedWarning/>;
   }
 
   if (assignment.status === "complete") {
-    return (
-      <div className="max-w-2xl mx-auto py-16">
-        <div className="bg-amber-100 p-4 rounded-lg flex justify-start gap-4">
-          <ExclamationIcon className="text-amber-700 w-12"/>
-
-          <div className="">
-            <h3 className="text-amber-700">Assignment is already complete</h3>
-            <p className="text-amber-800">Feel free to close this window</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <TaskAlreadyCompletedWarning/>;
   }
 
   return (
