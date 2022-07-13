@@ -110,8 +110,6 @@ function TaskCompletionForm(props) {
     channel: env.CHANNEL,
   };
 
-  // on submit, show the modal
-
   return (
     <div className="col-span-2">
       <div className="border rounded-lg bg-white">
@@ -123,18 +121,6 @@ function TaskCompletionForm(props) {
           <Formatic
             {...formaticProps}
           />
-        </div>
-
-        <div className="">
-          <label htmlFor="" className="block">Outcome</label>
-          {get(task, "template.possible_outcomes", []).map((outcome, i) => (
-            <div key={i}>
-              <input type="checkbox" value={outcome} />{" "}{outcome}
-            </div>
-          ))}
-
-          <label htmlFor="" className="block">Resolution Message</label>
-          <textarea className="form-input" name="resolution_message" id="" rows="3" />
         </div>
       </div>
     </div>
@@ -208,6 +194,7 @@ function ApprovalTaskScreen(props) {
   const [submission, setSubmission] = useState(null);
 
   function handleFormComplete() {
+    console.log('ApprovalTaskScreen@handleFormComplete');
     API.assignments.update(props.assignment.task.id, props.assignment.id, { status: "complete" })
       .then((res) => {
         console.log(res.data);
@@ -217,20 +204,16 @@ function ApprovalTaskScreen(props) {
       });
   }
 
-  // attach assignment_id to the xx
-  // on complete, auto-x
-  // get value of some field?
-  //
-
   useEffect(() => {
     console.log({ dataHelper });
     if (dataHelper.store) {
-      console.log({ dataHelper });
+      console.log('ApprovalTaskScreen@addCompleteHelper', { dataHelper });
       dataHelper.getEmitter().on("SessionComplete", handleFormComplete);
     }
   }, [dataHelper]);
 
   useEffect(() => {
+    console.log('ApprovalTaskScreen@loadConfig.json');
     axios
       .get(`${rootAppUrl}/config.json`)
       .then(res => setConfig(res.data));

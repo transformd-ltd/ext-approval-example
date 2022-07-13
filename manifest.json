@@ -1,7 +1,7 @@
 {
 	"id": "com.transformd.ext-approval-example",
 	"manifest_version": 1,
-	"version": "0.0.9",
+	"version": "0.0.12",
 	"name": "Example",
 	"icon": "icon.svg",
 	"environment": [
@@ -44,13 +44,21 @@
 		}
 	],
 	"routes": {
+		"home": {
+			"uri": "/"
+		},
 		"complete-task": {
-			"uri": "/",
+			"uri": "/complete-task/{submission_id}",
 			"params": {
 				"assignment_id": {
 					"type": "string",
 					"location": "query"
+				},
+				"submission_id": {
+					"type": "string",
+					"location": "path"
 				}
+
 			}
 		}
 	},

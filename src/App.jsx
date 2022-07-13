@@ -5,27 +5,12 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import PropTypes from "prop-types";
-import { ExclamationIcon, BadgeCheckIcon } from "@heroicons/react/outline";
+import PropTypes from "prop-types"
 import NotFound from "./components/NotFound";
 import "./App.css";
 import API from "./API";
 import ApprovalTaskPage from "./pages/ApprovalTaskPage";
-
-function HomePage() {
-
-  return (
-     <div className="max-w-2xl mx-auto py-16">
-      <div className="bg-blue-100 p-4 rounded-lg flex justify-start gap-4">
-        <BadgeCheckIcon className="text-blue-700 w-12"/>
-        <div>
-          <h3 className="text-blue-700">Approvals App</h3>
-          <p className="text-blue-800">Please navigate to this application using a deeplink.</p>
-        </div>
-      </div>
-    </div>
-  );
-}
+import HomePage from "./pages/Homepage";
 
 function App(props) {
   const [history, setHistory] = useState(null);
@@ -48,15 +33,12 @@ function App(props) {
       ? (
         <HistoryRouter history={history}>
           <Routes>
-            <Route path="*" element={<HomePage />} />
+            <Route path="/" element={<HomePage />} />
             <Route index path="/complete-task/:submissionId" element={<ApprovalTaskPage {...props} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </HistoryRouter>
-      )
-      : (
-        "Loading..."
-      )
+      ) : ("Loading...")
   );
 }
 
