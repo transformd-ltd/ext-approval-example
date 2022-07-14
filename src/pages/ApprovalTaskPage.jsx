@@ -4,11 +4,10 @@ import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import get from "lodash/get";
 import { ExclamationIcon } from "@heroicons/react/outline";
-
-
 import ErrorBoundary from "../components/ErrorBoundary";
 import API from "../API";
 import axios from "axios";
+import {Callout, Intent} from "@blueprintjs/core";
 
 function ObjectDescriptor({ value }) {
   return (
@@ -95,7 +94,8 @@ function TaskCompletionForm(props) {
     dataHelper,
     submission,
     task,
-    env
+    env,
+    error
   } = props;
 
   const formaticProps = {
@@ -118,6 +118,18 @@ function TaskCompletionForm(props) {
         </div>
 
         <div className="p-4">
+          {error && (
+            <div className="bg-red-100 p-4 rounded-lg flex justify-start gap-4">
+              <ExclamationIcon className="text-red-700 w-12"/>
+              <div className="">
+                <h3 className="text-red-700">Validation Error</h3>
+                {Object.keys(error).map(k => (<p className="text-red-800">{get(error, `${k}.0`)}</p>))}
+                <div className="pt-4">
+                  <button className="btn btn-primary" onClick={() => window.location.reload()}>Retry</button>
+                </div>
+              </div>
+            </div>
+          )}
           <Formatic
             {...formaticProps}
           />
@@ -198,19 +210,24 @@ function ApprovalTaskScreen(props) {
     API.assignments.update(props.assignment.task.id, props.assignment.id, { status: "complete" })
       .then((res) => {
         console.log(res.data);
-        // refresh the page?!
-        // todo - load the task again?
-        // record who completed the "approval"
-      });
+        window.location.reload();
+      })
+      .catch(err => {
+        console.log('FAIL!', {err})
+        setError(get(err.response, 'data.errors'));
+      })
   }
 
   useEffect(() => {
-    console.log({ dataHelper });
-    if (dataHelper.store) {
-      console.log('ApprovalTaskScreen@addCompleteHelper', { dataHelper });
-      dataHelper.getEmitter().on("SessionComplete", handleFormComplete);
-    }
-  }, [dataHelper]);
+    // todo - write about this
+    const timer = setInterval(() => {
+      if (dataHelper.store) {
+        clearInterval(timer);
+        console.log('ApprovalTaskScreen@addCompleteHelper', { dataHelper });
+        dataHelper.getEmitter().on("SessionComplete", handleFormComplete);
+      }
+    }, 1000);
+  }, []);
 
   useEffect(() => {
     console.log('ApprovalTaskScreen@loadConfig.json');
@@ -255,6 +272,7 @@ function ApprovalTaskScreen(props) {
             submission={submission}
             task={task}
             env={env}
+            error={error}
             apiUrl={props.apiUrl}
             sdkApiUrl={props.sdkApiUrl}
             subscriptionApiUrl={props.subscriptionApiUrl}
