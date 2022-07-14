@@ -1,7 +1,7 @@
 {
 	"id": "com.transformd.ext-approval-example",
 	"manifest_version": 1,
-	"version": "0.0.14",
+	"version": "0.0.15",
 	"name": "Example",
 	"icon": "icon.svg",
 	"environment": [

@@ -2,12 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import Formatic, { Data } from "@transformd-ltd/sdk";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 import get from "lodash/get";
 import { ExclamationIcon } from "@heroicons/react/outline";
 import ErrorBoundary from "../components/ErrorBoundary";
 import API from "../API";
 import axios from "axios";
-import {Callout, Intent} from "@blueprintjs/core";
 
 function ObjectDescriptor({ value }) {
   return (
@@ -95,7 +95,8 @@ function TaskCompletionForm(props) {
     submission,
     task,
     env,
-    error
+    error,
+    onRefresh
   } = props;
 
   const formaticProps = {
@@ -125,7 +126,7 @@ function TaskCompletionForm(props) {
                 <h3 className="text-red-700">Validation Error</h3>
                 {Object.keys(error).map(k => (<p className="text-red-800">{get(error, `${k}.0`)}</p>))}
                 <div className="pt-4">
-                  <button className="btn btn-primary" onClick={() => window.location.reload()}>Retry</button>
+                  <button className="btn btn-primary" onClick={onRefresh}>Retry</button>
                 </div>
               </div>
             </div>
@@ -200,6 +201,7 @@ function ApprovalTaskScreen(props) {
 
   const [config, setConfig] = useState(null);
   const [error, setError] = useState(null);
+  let navigate = useNavigate();
   const dataHelper = useMemo(() => new Data(), []);
   const params = useParams();
   const { submissionId } = params;
@@ -210,7 +212,8 @@ function ApprovalTaskScreen(props) {
     API.assignments.update(props.assignment.task.id, props.assignment.id, { status: "complete" })
       .then((res) => {
         console.log(res.data);
-        window.location.reload();
+        // window.location.reload();
+        handleRefresh();
       })
       .catch(err => {
         console.log('FAIL!', {err})
@@ -228,6 +231,12 @@ function ApprovalTaskScreen(props) {
       }
     }, 1000);
   }, []);
+
+  function handleRefresh() {
+    console.log('handleRefresh');
+    navigate(0);
+    // navigate("../success", { replace: true });
+  }
 
   useEffect(() => {
     console.log('ApprovalTaskScreen@loadConfig.json');
@@ -273,6 +282,7 @@ function ApprovalTaskScreen(props) {
             task={task}
             env={env}
             error={error}
+            onRefresh={handleRefresh}
             apiUrl={props.apiUrl}
             sdkApiUrl={props.sdkApiUrl}
             subscriptionApiUrl={props.subscriptionApiUrl}
