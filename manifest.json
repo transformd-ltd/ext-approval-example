@@ -1,7 +1,7 @@
 {
 	"id": "com.transformd.ext-approval-example",
 	"manifest_version": 1,
-	"version": "0.0.16",
+	"version": "0.0.17",
 	"name": "Example",
 	"icon": "icon.svg",
 	"environment": [
@@ -50,7 +50,7 @@
 		},
 		"complete-task": {
 			"name": "Complete Task",
-			"uri": "/complete-task/{submission_id}",
+			"uri": "/complete-task/{{submission_id}}",
 			"params": {
 				"submission_id": {
 					"type": "string",
