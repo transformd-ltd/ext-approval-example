@@ -209,7 +209,7 @@ function ApprovalTaskScreen(props) {
 
   function handleFormComplete() {
     console.log('ApprovalTaskScreen@handleFormComplete');
-    API.assignments.update(props.assignment.task.id, props.assignment.id, { status: "complete" })
+    API.assignments.update(props.assignment.task.id, props.assignment.id, { current_state: "complete" })
       .then((res) => {
         console.log(res.data);
         // window.location.reload();
@@ -259,7 +259,7 @@ function ApprovalTaskScreen(props) {
     return <TaskNotAssignedWarning/>;
   }
 
-  if (assignment.status === "complete") {
+  if (assignment.current_state === "complete") {
     return <TaskAlreadyCompletedWarning/>;
   }
 
