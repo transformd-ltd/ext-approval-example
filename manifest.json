@@ -45,20 +45,17 @@
 	],
 	"routes": {
 		"home": {
+			"name": "Home",
 			"uri": "/"
 		},
 		"complete-task": {
+			"name": "Complete Task",
 			"uri": "/complete-task/{submission_id}",
 			"params": {
-				"assignment_id": {
-					"type": "string",
-					"location": "query"
-				},
 				"submission_id": {
 					"type": "string",
 					"location": "path"
 				}
-
 			}
 		}
 	},
