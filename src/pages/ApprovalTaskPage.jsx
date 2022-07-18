@@ -181,7 +181,6 @@ function TaskAlreadyCompletedWarning() {
     <div className="max-w-2xl mx-auto py-16">
       <div className="bg-amber-100 p-4 rounded-lg flex justify-start gap-4">
         <ExclamationIcon className="text-amber-700 w-12"/>
-
         <div className="">
           <h3 className="text-amber-700">Assignment is already complete</h3>
           <p className="text-amber-800">Feel free to close this window</p>
@@ -234,7 +233,8 @@ function ApprovalTaskScreen(props) {
 
   function handleRefresh() {
     console.log('handleRefresh');
-    navigate(0);
+    // navigate(0);
+    props.onComplete();
     // navigate("../success", { replace: true });
   }
 

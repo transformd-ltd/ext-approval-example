@@ -1,7 +1,7 @@
 {
   "name": "@transformd-ltd/ext-approval-example",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.19",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -14,7 +14,7 @@
     "@heroicons/react": "^1.0.6",
     "@tailwindcss/forms": "^0.5.2",
     "@tailwindcss/typography": "^0.5.2",
-    "@transformd-ltd/sandbox-bridge": "^0.0.1",
+    "@transformd-ltd/sandbox-bridge": "^0.0.2",
     "@transformd-ltd/sdk": "^1.0.4-csc",
     "axios": "^0.27.2",
     "get": "^1.4.0",

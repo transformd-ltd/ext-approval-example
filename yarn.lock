@@ -419,10 +419,10 @@
   dependencies:
     ramda "^0.25.0"
 
-"@transformd-ltd/sandbox-bridge@^0.0.1":
-  version "0.0.1"
-  resolved "https://npm.pkg.github.com/download/@transformd-ltd/sandbox-bridge/0.0.1/755299a8d2c34d506624a63f1bc735e6ea50251d155a425cc6049aae4ed1352c#33e528c0d2173f3b63f1b2dac865992bf7264127"
-  integrity sha512-WxQ/6/fVY8FZBwO9YYSv9pHzwAob5nhKCHjoXKPodaXLuJZhJ5QAvFKK+H/bVksrHvQ12VWltrNV8UHKL80drw==
+"@transformd-ltd/sandbox-bridge@^0.0.2":
+  version "0.0.2"
+  resolved "https://npm.pkg.github.com/download/@transformd-ltd/sandbox-bridge/0.0.2/5fc54589cdaaf657bf1fce2eb24059977f8d7be4d884f03876ab9b73adc7bfa6#770beb49cf52ce522f260e409d2715f6ff3cb5e5"
+  integrity sha512-wA8g7EQ3OLoPwXvuXmUnyDKKGaToNlgsJK5b5mo2BplCsWLOLGpiBwOSMrL+AsP9X9VwdLELQ054V5h2fpJvCA==
   dependencies:
     history "^5.3.0"
     react "^18.0.0"

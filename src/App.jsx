@@ -24,9 +24,13 @@ function App(props) {
       .then((newHistory) => {
         setHistory(newHistory);
         setIsLoaded(true);
+        window.hh = newHistory;
       });
   }, [props.csrfToken]);
 
+  function handleComplete() {
+    view.callBridge('reload');
+  }
 
   return (
     isLoaded
@@ -34,7 +38,7 @@ function App(props) {
         <HistoryRouter history={history}>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route index path="/complete-task/:submissionId" element={<ApprovalTaskPage {...props} />} />
+            <Route index path="/complete-task/:submissionId" element={<ApprovalTaskPage {...props} onComplete={handleComplete} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </HistoryRouter>
