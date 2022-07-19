@@ -17,7 +17,7 @@
       "columns": 2,
       "data": [
         {"id": "abn", "title": "ABN", "span": 2},
-        {"id": "emailAddress", "title": "Email AGAIN"}
+        {"id": "yourLeave", "title": "Leave Date"}
       ]
     }
   ]
