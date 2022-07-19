@@ -24,7 +24,6 @@ function App(props) {
       .then((newHistory) => {
         setHistory(newHistory);
         setIsLoaded(true);
-        window.hh = newHistory;
       });
   }, [props.csrfToken]);
 
