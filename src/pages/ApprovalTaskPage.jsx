@@ -104,7 +104,7 @@ function TaskCompletionForm(props) {
     apiServerUrl: apiUrl,
     serverUrl: sdkApiUrl,
     subscriptionServerUrl: subscriptionApiUrl,
-    submissionIdKey: submission.id,
+    submissionId: submission.id,
     formId: Number(env.FORM_ID),
     apiKey: env.API_KEY,
     environment: env.BRANCH,
