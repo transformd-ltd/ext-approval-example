@@ -24,12 +24,94 @@ ObjectDescriptor.propTypes = {
   value: PropTypes.object,
 };
 
+function TextRenderer({ data }) {
+  const isObject = typeof data.value === "object";
+
+  if (isObject) {
+    return <pre>{JSON.stringify(data, null, 2)}</pre>
+  }
+
+  return (
+    <div>{data.value}</div>
+  )
+}
+
+function RepeatableRenderer({ data }) {
+  const config = {
+    title: '',
+    span: 2,
+  }
+  // todo - a way of displaying repeatable values!
+
+  return <div>
+    {data.value.map((val, i) => {
+      return (
+        <div>
+          {Object.keys(val.values).map(k => {
+            return (<DatumDescriptor data={val.values[k]} config={config} key={i}/>)
+          })}
+        </div>
+      )
+    })}
+  </div>
+}
+
+function ListRenderer({ data }) {
+  return (
+    <ul className="list-disc ml-2">{data.value.map((val, i) => <li key={i}>{val}</li>)}</ul>
+  )
+}
+
+function AbnLookupRenderer({ data }) {
+  return <div dangerouslySetInnerHTML={{__html: get(data, "value.abn.details") }}></div>;
+}
+
+function FileUploadRenderer({ data }) {
+  return (
+    <ul>
+      {data.files.map((file, i) => {
+        return (
+          <li key={i}>
+            <a href={file.download_url} target="_top">{file.filename}</a>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+function getRenderer(type) {
+  console.log('getRenderer', type);
+
+  switch (type) {
+    case 'repeatable':
+      return RepeatableRenderer;
+
+    case 'checkboxList':
+    case 'buttonList':
+    case 'dropdown':
+      return ListRenderer;
+
+    case 'fileUpload':
+      return FileUploadRenderer;
+
+    case 'abnLookup':
+      return AbnLookupRenderer;
+
+    default:
+      return TextRenderer;
+  }
+}
+
 function DatumDescriptor({ config, data }) {
   const type = get(data, "type");
   const value = get(data, "value");
   const span = get(config, "span", 1);
-  const isObject = typeof value === "object";
+  // const isObject = typeof value === "object";
   const isAbnLookup = type === "abnLookup";
+
+  console.log('datum', data);
+  const Renderer = getRenderer(type);
 
   if (!data) {
     return null;
@@ -39,9 +121,7 @@ function DatumDescriptor({ config, data }) {
     <div className={`col-span-${span}`}>
       <h5 className="text-gray-400 font-normal">{config.title}</h5>
       <div>
-        {!isObject && (<div>{value}</div>)}
-        {(isObject && !isAbnLookup) && (<ObjectDescriptor value={value} />)}
-        {isAbnLookup && (<div dangerouslySetInnerHTML={{__html: get(data, "value.abn.details") }}></div>)}
+        <Renderer data={data}/>
       </div>
     </div>
   );
@@ -53,6 +133,8 @@ DatumDescriptor.propTypes = {
 
 function DetailSection({ submission, section }) {
   const cols = get(section, "columns", 2);
+
+  console.log('DetailSection', { submission, section });
 
   return (
     <div className="bg-white rounded-lg mb-4 shadow-sm">
@@ -175,6 +257,19 @@ function TaskNotAssignedWarning() {
     </div>
   )
 }
+function Error({ title, text }) {
+  return (
+    <div className="max-w-2xl mx-auto py-16">
+      <div className="bg-red-100 p-4 rounded-lg flex justify-start gap-4">
+        <ExclamationIcon className="text-red-700 w-12"/>
+        <div className="">
+          <h3 className="text-red-700">{title}</h3>
+          {/*<p className="text-red-800">Please assign this submission as a task before opening the URL</p>*/}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function TaskAlreadyCompletedWarning() {
   return (
@@ -200,18 +295,21 @@ function ApprovalTaskScreen(props) {
 
   const [config, setConfig] = useState(null);
   const [error, setError] = useState(null);
-  let navigate = useNavigate();
+
   const dataHelper = useMemo(() => new Data(), []);
   const params = useParams();
   const { submissionId } = params;
   const [submission, setSubmission] = useState(null);
-
+//famousPerson
   function handleFormComplete() {
-    console.log('ApprovalTaskScreen@handleFormComplete');
-    API.assignments.update(props.assignment.task.id, props.assignment.id, { current_state: "complete" })
+    API.assignments
+      .update(
+        props.assignment.task.id,
+        props.assignment.id,
+        { current_state: "complete" }
+      )
       .then((res) => {
         console.log(res.data);
-        // window.location.reload();
         handleRefresh();
       })
       .catch(err => {
@@ -232,24 +330,33 @@ function ApprovalTaskScreen(props) {
   }, []);
 
   function handleRefresh() {
-    console.log('handleRefresh');
-    // navigate(0);
     props.onComplete();
-    // navigate("../success", { replace: true });
   }
 
   useEffect(() => {
-    console.log('ApprovalTaskScreen@loadConfig.json');
     axios
       .get(`${rootAppUrl}/config.json`)
-      .then(res => setConfig(res.data));
+      .then(res => {
+        if (typeof res.data === 'string') {
+          setError('Config JSON file is invalid')
+        } else {
+          setConfig(res.data)
+        }
+      });
 
     API.submissions.retrieve(submissionId)
       .then((res) => setSubmission(res.data))
       .catch((err) => {
+        setError('Could not find submission with id: '+submissionId);
         console.error(err);
       });
   }, []);
+
+  if (error) {
+    return (
+      <Error title={error}/>
+    )
+  }
 
   if (!config || !submission) {
     return <Loading/>;

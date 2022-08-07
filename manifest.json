@@ -34,13 +34,6 @@
 			"default": "master",
 			"type": "string",
 			"is_required": true
-		},
-		{
-			"key": "IS_LIVE",
-			"label": "Is Live?",
-			"description": "Is this a live environment",
-			"default": true,
-			"type": "boolean"
 		}
 	],
 	"routes": {
@@ -54,7 +47,8 @@
 			"params": {
 				"submission_id": {
 					"type": "string",
-					"location": "path"
+					"location": "path",
+					"source": "assignment.subject.id"
 				}
 			}
 		}
