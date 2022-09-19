@@ -1,7 +1,7 @@
 {
   "name": "@transformd-ltd/ext-approval-example",
   "private": true,
-  "version": "0.0.24",
+  "version": "0.0.26",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

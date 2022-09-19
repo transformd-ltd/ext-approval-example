@@ -58,7 +58,7 @@ function RepeatableRenderer({ data }) {
 
 function ListRenderer({ data }) {
   return (
-    <ul className="list-disc ml-2">{data.value.map((val, i) => <li key={i}>{val}</li>)}</ul>
+    <ul className="list-none ml-2">{data.value.map((val, i) => <li key={i}>{val}</li>)}</ul>
   )
 }
 
